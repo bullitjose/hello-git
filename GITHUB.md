@@ -236,4 +236,4 @@ Available subcommands are:
 
 Try 'git flow <subcommand> help' for details.
 ```
-Nos salen opciones de git flow, 
+Nos salen opciones de git flow, para iniciar a trabajar con git flow, hacemos git flow init!!

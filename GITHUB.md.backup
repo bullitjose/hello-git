@@ -235,6 +235,5 @@ Available subcommands are:
    log       Show log deviating from base branch.
 
 Try 'git flow <subcommand> help' for details.
-
-
 ```
+Nos salen opciones de git flow, para iniciar a trabajar con git flow, hacemos git flow init!!
