@@ -201,6 +201,9 @@ Desde el "usuariodelfork", en github, si hay cambios del repositorio1, nos indic
 
 + github desktop (la oficial, justa)
 + gitkraken (mejor herramienta grafica)
+Hay que pagar si trabajamos con repositorios privados
++ sourcetreeapp.com (windows o mac, no linux)
++ git-fork 
 
 
 
