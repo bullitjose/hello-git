@@ -1,0 +1,206 @@
+# GitHub
+
+
+## Autenticación SSH (si siempre trabajamos con la misma maquina) ##
+Conectar con SSH, es la forma mas correcta de sincronizar y conectarse con GitHub.
+
+Listar las claves:
+```
+$ls -al ~/.ssh
+```
+Tambien buscar carpeta oculta .ssh, y ver contenido.
+Vamos a ~(raiz del disco o home), y para ver carpetas ocultas:
+```
+$ls -a 
+```
+ubicarnos en la carpeta ssh:
+```
+$cd .ssh
+$ls
+id_ed25519  id_ed25519.pub  known_hosts  known_hosts.old
+
+```
+Vemos que tenemos un nombre admitido por GitHub como clave publica:
+
+**id_ed25519.pub**
+
+No hace falta crear una nueva.
+
+ver los pasos
+[Generación de una clave SSH nueva](https://docs.github.com/es/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+
+
++ COMPROBAR CONEXIÓN CON GITHUB (CON LA CLAVE SSH AÑADIDA)
+
+```
+$ssh -T git@github.com
+Hi bullitjose! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+## REPOSITORIO PROYECTO
+
+Tenemos un proyecto Git en local, y lo subiremos a GitHub. En local tenemos la carpeta "Hello git" y en GitHub hemos creado el repositorio "hello-git"
+
++ remote, configuramos con que repositorio en github queremos que se asocie el git local:
+```
+$git remote add origin https://github.com/bullitjose/hello-git.git
+```
+
++ push , subir el repositorio local (master) de git al remoto github (origin):
+```
+$git push -u origin master
+```
+
+Si hemos configurado con ssh y hacer el push nos sale:
+```
+S'estan enumerant els objectes: 43, fet.
+S'estan comptant els objectes: 100% (43/43), fet.
+Compressió de diferències usant fins a 4 fils
+S'estan comprimint els objectes: 100% (30/30), fet.
+S'estan escrivint els objectes: 100% (43/43), 3.45 KiB | 505.00 KiB/s, fet.
+Total 43 (13 diferències), reusats 0 (0 diferències), paquets reusats 0
+remote: Resolving deltas: 100% (13/13), done.
+To github.com:bullitjose/hello-git.git
+ * [new branch]      master -> master
+La branca «master» està configurada per a seguir la branca remota «master» de «origin».
+```
+## La branca «master» està configurada per a seguir la branca remota «master» de «origin» ##
+
+
+
+## cambiar remote, para validar con ssh: ##
+```
+$git remote -v
+origin	https://github.com/bullitjose/hello-git.git (fetch)
+origin	https://github.com/bullitjose/hello-git.git (push)
+
+$remote set-url origin git@github.com:bullitjose/hello-git.git
+
+$git remote -v
+origin	git@github.com:bullitjose/hello-git.git (fetch)
+origin	git@github.com:bullitjose/hello-git.git (push)
+```
+[Switch remote urls form https to ssh]https to ](https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories#switching-remote-urls-from-https-to-ssh)
+
+
+
++ SUBIDA PROYECTO.
+
+### fetch ###
+Para subir commits de local o master de git, al master de github:
+
+1, hacer fetch, descarga
+```
+$git fetch
+remote: Enumerating objects: 4, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
+S'estan desempaquetant els objectes: 100% (3/3), 656 bytes | 656.00 KiB/s, fet.
+De github.com:bullitjose/hello-git
+   feea8e0..b57f1cf  master     -> origin/master
+
+$git tree
+* 353d2d3 (HEAD -> master) hello Github
+| * b57f1cf (origin/master) Create README.md
+|/  
+* feea8e0 Login v4
+* 980bbcf Login v3
+* fcbfaa3 Login v2
+*   05378b6 Correccion hellogit3.py
+|\  
+| * 9527612 Git commit v3
+* | 0f05722 Git 3 login v2
+* | 7fdd70b Git 3 login
+* | 7cef54b Merge branch 'master' into login
+|\| 
+| * 47da440 Git 3 v2
+* | 2575035 Login
+|/  
+* 901be81 este es mi 5 commit
+* 8a05197 (tag: clase_1) Se añade el .gitingnore
+* 18eab43 Se actualiza el texto del print
+* 5f06fcb Este es mi segundo commit
+* 627f2be Este es mi primer commit
+
+```
+### con el tree, vemos el problema, la rama local de git HEAD->MASTER y la ORIGIN/MASTER de GITHUB DIFIEREN, se ha creado README.md!! ###
+
+### git fetch baja el historial SIN LOS CAMBIOS, y git pull baja el HISTORIAL y los CAMBIOS ###
+```
+$git pull
+consell: You have divergent branches and need to specify how to reconcile them.
+consell: You can do so by running one of the following commands sometime before
+consell: your next pull:
+consell: 
+consell:   git config pull.rebase false  # merge (the default strategy)
+consell:   git config pull.rebase true   # rebase
+consell:   git config pull.ff only       # fast-forward only
+consell: 
+consell: You can replace "git config" with "git config --global" to set a default
+consell: preference for all repositories. You can also pass --rebase, --no-rebase,
+consell: or --ff-only on the command line to override the configured default per
+consell: invocation.
+fatal: Cal especificar com reconciliar les branques divergents.
+```
++ Por defecto y recomendado la forma de bajar los cambios de origin a local es merge. Por primera vez hay que definir el metodo de base (merge), al hacer el pull nos lo indicaba "consell:   git config pull.rebase false  # merge (the default strategy)":
+```
+$git config pull.rebase false
+$git pull origin master 
+De github.com:bullitjose/hello-git
+ * branch            master     -> FETCH_HEAD
+Merge made by the 'ort' strategy.
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 README.md
+```
+### Y ahora se ha traido los cambios de origin a head->master ###
+### Cuando queramos bajar cambios del github a local, mejor hacer merge (git config pull.rebase false i luego git pull origin master): ###
+```
+$git config pull.rebase false
+$git pull origin master
+```
+
+
++ git clone
+
+Empezar a trabajar en un repositorio, bajar o clonar el repositorio gitHub, opcion clone por SSH, en directorio local hacemos:
+```
+$git clone git@github.com:bullitjose/hello-git.git
+S'està clonant a «hello-git»...
+remote: Enumerating objects: 54, done.
+remote: Counting objects: 100% (54/54), done.
+remote: Compressing objects: 100% (22/22), done.
+remote: Total 54 (delta 17), reused 51 (delta 16), pack-reused 0
+S'estan rebent objectes: 100% (54/54), 4.78 KiB | 2.39 MiB/s, fet.
+S'estan resolent les diferències: 100% (17/17), fet.
+```
+Ahora tenemos una copia sincronizada del repositorio github en local.
+
+>#### github fork (flujo colaborativo)
+
+Si no tenemos permisos en un proyecto, el usuario nuevo puede utilizar el fork. Fork, permite subir cambios a repositorio github donde no tenemos permisos, permite subir cambios sin afectar al original. En el github podemos "Create a fork", podemos hacer un clone de nuestro repositorio en github!!!, dando un "Repository name". Ahora tenemos dos repositorios en github, el original y el que hemos hecho fork.
+
+Si hacemos cambios en el proyecto del fork y queremos enviar cambios al proyecto original, hay que primero hacer un sync con el proyecto original (como si hicieramos un merge previo en local con repo de github).
+Ahora podemos subir los cambios al github original, donde no tenemos permisos de escritura, ir a "Contribute" en el github.
+>#### pull request
+pull request, dentro de github, permite elegir dos ramas y ver que ha cambiado o empezar un nuevo pull request. Formato de comparacion:
+(a la izquierda) "base repository:repositorio1""base:main"<-
+(a la derecha)"head repository:repositoriodelfork" "compare:main"
+Añadir un comentario, y pulsar "create pull request"
+### ojo nunca volcar en branch main!! ("base:main"), modificarla.
+Así en el repositorio1, aparecerá en la pestaña "pull request", el commit realizado por el "repositoriodelfork". Ahora faltaria que el usuario con permisos del repositiro1, confirme los cambios y realize el "merge pull request".
+
+
+>### fork
+Desde el "usuariodelfork", en github, si hay cambios del repositorio1, nos indica que : "this branch is 233 commits ahead repositorio1:main" y codemos sincronizarlo "Sync fork". Al hacer "Sync Fork", sale mensaje de "this branch is out-of-date" y que podemos "compare" o "update branch". Hacemos "update branch" para sincronizar los cambios.
+
+>### github markdown
+
+
+
+
+
+
+
+
