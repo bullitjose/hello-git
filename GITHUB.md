@@ -207,10 +207,17 @@ Hay que pagar si trabajamos con repositorios privados
 
 
 
+>### git & github "flow"
 
+ [articulo estrategia "flow" con Gitkraken] (https://www.gitkraken.com/learn/git/best-practices/git-branch-strategy)
+ [tutorial atlassian gitflow-workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
-
-
+git flow, tiene diferentes formas de trabajar. Tenemos la rama master o main (la rama que versiona o pasa a Produccion), de aqui creamos la Develop que desarrolla!!.
+	 El proyecto se desarrola en ramas feature, y son ramas que salen de Develop.
+	  Ramas Main y Develop nunca se cierran.
+	  Ramas release, son ramas que se abren de Develop, que en el momento que se cierren sobre Develop y CREA UN TAG SOBRE LA MAIN.
+	  Rama especial Hotfix, correciones en caliente, salen de Main para corregir error en caliente que sale en produccion. Cuando cierro rama Hotfix, se cierra en Main y pasa tag y tambien se cierra en Develop para que tenga ese cambio en caliente.
+		 **Para asegurarnos que utilizamos estrategia git o github "flow" existe un pluggin**
 
 
 
